@@ -36,17 +36,11 @@ export function Nav() {
       position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 1px 12px rgba(58,53,48,0.06)'
     }}>
       <Link to="/" style={{ textDecoration: 'none' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            width: 36, height: 36, borderRadius: 10, background: C.sage,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 18, color: 'white'
-          }}>🏛</div>
-          <div>
-            <div style={{ fontFamily: 'Cormorant Garamond, serif', fontWeight: 700, fontSize: 18, color: C.text, lineHeight: 1.1 }}>SpacesByTWC</div>
-            <div style={{ fontSize: 9, color: C.muted, letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 500 }}>Intentionally Designed</div>
-          </div>
-        </div>
+        <img
+          src="/spaces-logo.png"
+          alt="SpacesByTWC"
+          style={{ height: 52, objectFit: 'contain', display: 'block' }}
+        />
       </Link>
       <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
         <Link to="/quiz" className="nav-link" style={{ fontSize: 13, fontWeight: 500, color: C.text, textDecoration: 'none', transition: 'color 0.15s' }}>Space Quiz</Link>
