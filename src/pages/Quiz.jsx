@@ -20,11 +20,12 @@ const css = `
 `
 
 const STEPS = [
-  { id: 1, label: 'Your Space', tag: 'Step 1 of 5' },
-  { id: 2, label: 'Right Now', tag: 'Step 2 of 5' },
-  { id: 3, label: 'Desired Feeling', tag: 'Step 3 of 5' },
-  { id: 4, label: 'How You Live', tag: 'Step 4 of 5' },
-  { id: 5, label: 'Aesthetic', tag: 'Step 5 of 5' },
+  { id: 1, label: 'Your Space', tag: 'Step 1 of 6' },
+  { id: 2, label: 'Right Now', tag: 'Step 2 of 6' },
+  { id: 3, label: 'Desired Feeling', tag: 'Step 3 of 6' },
+  { id: 4, label: 'How You Live', tag: 'Step 4 of 6' },
+  { id: 5, label: 'Aesthetic', tag: 'Step 5 of 6' },
+  { id: 6, label: 'About You', tag: 'Step 6 of 6' },
 ]
 
 const SPACE_TYPES = [
@@ -103,6 +104,10 @@ export default function Quiz() {
     whoUses: '',
     restFrequency: 0,
     aesthetic: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    followUp: true,
   })
 
   function set(key, val) { setForm(f => ({ ...f, [key]: val })) }
@@ -113,11 +118,12 @@ export default function Quiz() {
     if (step === 3) return !!form.desiredFeeling
     if (step === 4) return !!form.whoUses && form.restFrequency > 0
     if (step === 5) return !!form.aesthetic
+    if (step === 6) return !!form.firstName && !!form.email
     return false
   }
 
   function advance() {
-    if (step < 5) { setStep(s => s + 1); window.scrollTo(0, 0) }
+    if (step < 6) { setStep(s => s + 1); window.scrollTo(0, 0) }
     else {
       const result = generateSpacesDiagnosis(form)
       sessionStorage.setItem('spaces_result', JSON.stringify({ form, result }))
@@ -125,7 +131,7 @@ export default function Quiz() {
     }
   }
 
-  const progress = (step / 5) * 100
+  const progress = (step / 6) * 100
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg }}>
@@ -351,6 +357,74 @@ export default function Quiz() {
           </div>
         )}
 
+        {/* STEP 6 — About You */}
+        {step === 6 && (
+          <div className="page">
+            <div style={{ background: C.card, borderRadius: 18, padding: '28px 26px', border: `1px solid ${C.border}`, marginBottom: 14 }}>
+              <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', color: C.sage, marginBottom: 10 }}>Almost There</div>
+              <h2 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 22, fontWeight: 700, color: C.text, lineHeight: 1.4, marginBottom: 6 }}>
+                Who are we speaking to?
+              </h2>
+              <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, marginBottom: 22 }}>
+                Your results are ready. Just tell us your name and email so we can send them to you and keep in touch.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: C.text }}>First Name *</label>
+                  <input
+                    value={form.firstName}
+                    onChange={e => set('firstName', e.target.value)}
+                    placeholder="Your first name"
+                    style={{
+                      display: 'block', width: '100%', padding: '12px 14px', borderRadius: 10,
+                      border: `1.5px solid ${C.border}`, background: '#FAFAF8', fontSize: 13,
+                      color: C.text, fontFamily: 'DM Sans, sans-serif', marginTop: 6, outline: 'none'
+                    }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: C.text }}>Last Name</label>
+                  <input
+                    value={form.lastName}
+                    onChange={e => set('lastName', e.target.value)}
+                    placeholder="Your last name"
+                    style={{
+                      display: 'block', width: '100%', padding: '12px 14px', borderRadius: 10,
+                      border: `1.5px solid ${C.border}`, background: '#FAFAF8', fontSize: 13,
+                      color: C.text, fontFamily: 'DM Sans, sans-serif', marginTop: 6, outline: 'none'
+                    }} />
+                </div>
+              </div>
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ fontSize: 12, fontWeight: 600, color: C.text }}>Email Address *</label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={e => set('email', e.target.value)}
+                  placeholder="your@email.com"
+                  style={{
+                    display: 'block', width: '100%', padding: '12px 14px', borderRadius: 10,
+                    border: `1.5px solid ${C.border}`, background: '#FAFAF8', fontSize: 13,
+                    color: C.text, fontFamily: 'DM Sans, sans-serif', marginTop: 6, outline: 'none'
+                  }} />
+              </div>
+              <div
+                onClick={() => set('followUp', !form.followUp)}
+                style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                <div style={{
+                  width: 20, height: 20, borderRadius: 6, border: `2px solid ${form.followUp ? C.sage : C.border}`,
+                  background: form.followUp ? C.sage : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                }}>
+                  {form.followUp && <span style={{ color: 'white', fontSize: 11, fontWeight: 700 }}>✓</span>}
+                </div>
+                <span style={{ fontSize: 13, color: C.muted, lineHeight: 1.5 }}>
+                  I am happy for SpacesByTWC to follow up with me about my results
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Navigation */}
         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           {step > 1 && (
@@ -375,7 +449,7 @@ export default function Quiz() {
               fontSize: 15, fontWeight: 600, cursor: canAdvance() ? 'pointer' : 'not-allowed',
               transition: 'all 0.15s'
             }}>
-            {step < 5 ? `Continue to Step ${step + 1} →` : 'Reveal My Space Archetype ✦'}
+            {step < 5 ? `Continue to Step ${step + 1} →` : step === 5 ? 'Almost Done →' : 'Reveal My Space Archetype ✦'}
           </button>
         </div>
       </div>
