@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Nav } from './Landing.jsx'
 import { generateSpacesDiagnosis } from '../utils/diagnosis.js'
+import { submitSpaces } from '../utils/api.js'
 
 const C = {
   sage: '#7C9A84', sageDark: '#5E7A65', sand: '#C4956A', sandLight: '#F0E4D4',
@@ -122,11 +123,12 @@ export default function Quiz() {
     return false
   }
 
-  function advance() {
+  async function advance() {
     if (step < 6) { setStep(s => s + 1); window.scrollTo(0, 0) }
     else {
       const result = generateSpacesDiagnosis(form)
       sessionStorage.setItem('spaces_result', JSON.stringify({ form, result }))
+      submitSpaces({ ...form, archetype: result.primary, secondaryArchetype: result.secondary }).catch(() => {})
       navigate('/results')
     }
   }
